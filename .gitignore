@@ -24,4 +24,5 @@ package-lock.json
 
 # Misc
 _sass/vendors
-assets/js/dist
+# Track built JS assets for GitHub Pages deployment
+# (Do not ignore assets/js/dist)
