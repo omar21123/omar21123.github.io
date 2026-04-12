@@ -1,0 +1,72 @@
+<style>
+  @media (min-width: 769px) {
+    /* Cache la souris Windows */
+    html, body, a, button, .card, .post-tag { cursor: none !important; }
+
+    #custom-cursor-arrow {
+      position: fixed; top: 0; left: 0; pointer-events: none;
+      z-index: 2147483647; will-change: transform;
+    }
+    #custom-cursor-outline {
+      position: fixed; top: 0; left: 0; width: 35px; height: 35px;
+      border: 2px solid rgba(255, 51, 51, 0.5); border-radius: 50%;
+      pointer-events: none; z-index: 2147483646;
+      transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s;
+    }
+    #cursor-canvas-layer {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483645;
+    }
+  }
+</style>
+
+<script>
+  // On injecte les éléments dès que le body est prêt
+  const injectCursor = () => {
+    if (document.getElementById('custom-cursor-arrow')) return;
+    
+    const outline = document.createElement('div');
+    outline.id = 'custom-cursor-outline';
+    document.body.appendChild(outline);
+
+    const arrow = document.createElement('div');
+    arrow.id = 'custom-cursor-arrow';
+    arrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="26" viewBox="0 0 20 24"><polygon points="0,0 0,18 5,13 9,22 12,21 8,12 14,12" fill="#ffffff" stroke="#ff3333" stroke-width="1.5"/></svg>`;
+    document.body.appendChild(arrow);
+
+    const canvas = document.createElement('canvas');
+    canvas.id = 'cursor-canvas-layer';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    let mx = -100, my = -100, ox = -100, oy = -100;
+    const particles = [];
+
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    window.addEventListener('resize', resize); resize();
+
+    document.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      arrow.style.transform = `translate(${mx}px, ${my}px)`;
+      if (Math.random() < 0.3) {
+        particles.push({x: mx, y: my, r: 1.5, a: 0.8, vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5, color: Math.random() > 0.5 ? '#ff3333' : '#ffffff'});
+      }
+    });
+
+    const render = () => {
+      ox += (mx - ox) * 0.15; oy += (my - oy) * 0.15;
+      outline.style.left = ox + 'px'; outline.style.top = oy + 'px';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i]; p.x += p.vx; p.y += p.vy; p.a -= 0.02;
+        if (p.a <= 0) { particles.splice(i, 1); continue; }
+        ctx.globalAlpha = p.a; ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+      }
+      requestAnimationFrame(render);
+    };
+    render();
+  };
+
+  if (document.readyState === 'complete') injectCursor();
+  else window.addEventListener('load', injectCursor);
+</script>
