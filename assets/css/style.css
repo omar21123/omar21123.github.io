@@ -1,0 +1,10 @@
+@media (min-width: 769px) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+  
+  /* On garde le curseur pointeur sur les liens mais on utilise le nôtre */
+  a, button {
+    cursor: none !important;
+  }
+}

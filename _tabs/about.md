@@ -1,76 +1,155 @@
 ---
 layout: page
-title: About
+title: About Me
 icon: fas fa-info-circle
 order: 1
 ---
 
-## Bonjour, Hello, مرحبا
+<div class="about-header">
+  <h2 class="cyber-title">System.init("Omar El Bouhsaini")</h2>
+  <p class="cyber-subtitle">Future Cybersecurity Engineer | Digital Developer</p>
+</div>
 
-I am **Omar El Bouhsaini**, a 4th-year Engineering Student in **Digital Development and Cybersecurity** at **ENSA Fez**, specializing in secure web development and AI-driven security.
+I am a **4th-year Engineering Student** at **ENSA Fez**, specializing in **Digital Development and Cybersecurity**. My work focuses on the intersection of secure software architecture and offensive security methodologies.
 
-Passionate about modern technologies, I train and develop secure, high-performance, and scalable applications, using stacks like **Python, PHP, and Cybersecurity tools**.
-
-My goal? Combine **IT security** and **software development** to create robust and reliable systems, while exploring new trends in **Web, AI, and Cybersecurity**.
+Driven by a "Security-by-Design" mindset, I develop scalable applications while actively exploring threat hunting, penetration testing, and AI-driven anomaly detection.
 
 ---
 
-## Skills
+## Technical Arsenal
 
-<div class="skills-container" style="display: flex; flex-direction: column; gap: 20px; border: 1px solid #88888844; padding: 25px; border-radius: 15px; background-color: transparent;">
+<div class="skills-grid">
 
-  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-    
-    <div style="flex: 1; min-width: 220px; border: 1px solid #88888844; border-radius: 10px; padding: 15px;">
-      <h3 style="text-align: center; margin-top: 0; border-bottom: none; font-size: 1.2rem;">Cybersecurity</h3>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-shield-alt" style="color: #e34c26;"></i> OWASP / Burp Suite</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-network-wired" style="color: #264de4;"></i> Nmap / Wireshark</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-bug" style="color: #00bcd4;"></i> Metasploit</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-lock" style="color: #f7df1e;"></i> Hashcat / Ghidra</div>
-      </div>
+  <div class="skill-category">
+    <div class="category-header">
+      <i class="fas fa-user-secret"></i>
+      <h3>Offensive Security</h3>
     </div>
-
-    <div style="flex: 1; min-width: 220px; border: 1px solid #88888844; border-radius: 10px; padding: 15px;">
-      <h3 style="text-align: center; margin-top: 0; border-bottom: none; font-size: 1.2rem;">Web Development</h3>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fab fa-html5" style="color: #e34c26;"></i> HTML5 / CSS3</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fab fa-js" style="color: #f7df1e;"></i> JavaScript</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fab fa-php" style="color: #777bb4;"></i> PHP 8.3 (MVC)</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fab fa-bootstrap" style="color: #7952b3;"></i> Bootstrap 5</div>
-      </div>
-    </div>
-
-    <div style="flex: 1; min-width: 220px; border: 1px solid #88888844; border-radius: 10px; padding: 15px;">
-      <h3 style="text-align: center; margin-top: 0; border-bottom: none; font-size: 1.2rem;">Data & AI</h3>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fab fa-python" style="color: #3776ab;"></i> Scikit-learn</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-brain" style="color: #ff6600;"></i> Machine Learning</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-database" style="color: #4479a1;"></i> MySQL / Oracle</div>
-      </div>
+    <div class="skill-list">
+      <div class="skill-item"><span>OWASP Top 10</span></div>
+      <div class="skill-item"><span>Network Pentesting (Nmap, Wireshark)</span></div>
+      <div class="skill-item"><span>Exploitation Frameworks (Metasploit)</span></div>
+      <div class="skill-item"><span>Vulnerability Assessment (Burp Suite)</span></div>
     </div>
   </div>
 
-  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-    
-    <div style="flex: 1.5; min-width: 250px; border: 1px solid #88888844; border-radius: 10px; padding: 15px;">
-      <h3 style="text-align: center; margin-top: 0; border-bottom: none; font-size: 1.2rem;">Networking & Protocols</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
-        <div style="border: 1px solid #88888822; padding: 8px; border-radius: 6px; text-align: center;">TCP/IP</div>
-        <div style="border: 1px solid #88888822; padding: 8px; border-radius: 6px; text-align: center;">DNS / DHCP</div>
-        <div style="border: 1px solid #88888822; padding: 8px; border-radius: 6px; text-align: center;">OSPF / BGP</div>
-        <div style="border: 1px solid #88888822; padding: 8px; border-radius: 6px; text-align: center;">VLAN</div>
-      </div>
+  <div class="skill-category">
+    <div class="category-header">
+      <i class="fas fa-code"></i>
+      <h3>Secure Development</h3>
     </div>
+    <div class="skill-list">
+      <div class="skill-item"><span>Python (Security Automation)</span></div>
+      <div class="skill-item"><span>PHP 8.3 (Secure MVC)</span></div>
+      <div class="skill-item"><span>C / C++ & Java</span></div>
+      <div class="skill-item"><span>Secure API Design</span></div>
+    </div>
+  </div>
 
-    <div style="flex: 1; min-width: 220px; border: 1px solid #88888844; border-radius: 10px; padding: 15px;">
-      <h3 style="text-align: center; margin-top: 0; border-bottom: none; font-size: 1.2rem;">Languages</h3>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fab fa-python" style="color: #3776ab;"></i> Python (Advanced)</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-code" style="color: #f80000;"></i> C / C++</div>
-        <div style="border: 1px solid #88888822; padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px;"><i class="fab fa-java" style="color: #b07219;"></i> Java</div>
-      </div>
+  <div class="skill-category">
+    <div class="category-header">
+      <i class="fas fa-microchip"></i>
+      <h3>Infrastructure & AI</h3>
+    </div>
+    <div class="skill-list">
+      <div class="skill-item"><span>Network Protocols (TCP/IP, BGP)</span></div>
+      <div class="skill-item"><span>Machine Learning for Security</span></div>
+      <div class="skill-item"><span>Database Security (MySQL, Oracle)</span></div>
+      <div class="skill-item"><span>Linux System Administration</span></div>
     </div>
   </div>
 
 </div>
+
+{% include cursor.html %}
+
+<style>
+  /* --- Global Styles --- */
+  .cyber-title {
+    font-family: 'JetBrains Mono', monospace;
+    color: #ff3333;
+    font-weight: 800;
+    margin-bottom: 5px;
+  }
+
+  .cyber-subtitle {
+    font-size: 1.1rem;
+    color: #888;
+    margin-bottom: 30px;
+    font-family: monospace;
+  }
+
+  /* --- Skills Grid --- */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .skill-category {
+    background: rgba(136, 136, 136, 0.05);
+    border: 1px solid rgba(136, 136, 136, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .skill-category:hover {
+    border-color: #ff3333;
+    box-shadow: 0 5px 15px rgba(255, 51, 51, 0.1);
+    transform: translateY(-5px);
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 51, 51, 0.3);
+    padding-bottom: 10px;
+  }
+
+  .category-header i {
+    color: #ff3333;
+    font-size: 1.4rem;
+  }
+
+  .category-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    border: none;
+  }
+
+  .skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .skill-item {
+    background: rgba(136, 136, 136, 0.05);
+    border: 1px solid rgba(136, 136, 136, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+
+  .skill-item:hover {
+    background: rgba(255, 51, 51, 0.05);
+    border-color: rgba(255, 51, 51, 0.4);
+    padding-left: 18px;
+  }
+
+  /* --- Dark/Light Mode Adaptations --- */
+  html[data-mode="dark"] .skill-category {
+    background: #1e1e1e;
+  }
+  
+  html[data-mode="light"] .skill-category {
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+</style>

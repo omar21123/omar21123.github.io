@@ -1,0 +1,154 @@
+
+<div class="cursor-dot" data-cursor-dot></div>
+<div class="cursor-outline" data-cursor-outline></div>
+
+<style>
+/* Hide the default mouse cursor */
+body, a, button {
+    cursor: none !important;
+}
+
+/* The small red dot in the center */
+.cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    background-color: #ff3333; 
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    pointer-events: none; 
+}
+
+/* The large red circle that follows the dot */
+.cursor-outline {
+    position: fixed;
+    top: 0; left: 0;
+    width: 40px; height: 40px;
+    border: 2px solid rgba(255, 51, 51, 0.5); 
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Make the circle bigger when you hover over links */
+a:hover ~ .cursor-outline,
+button:hover ~ .cursor-outline {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 51, 51, 0.1);
+}
+
+/* Turn off the custom cursor on mobile phones */
+@media (max-width: 768px) {
+    .cursor-dot, .cursor-outline {
+        display: none;
+    }
+    body, a, button {
+        cursor: auto !important;
+    }
+}
+@media (min-width: 769px) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+  
+  /* On garde le curseur pointeur sur les liens mais on utilise le nôtre */
+  a, button {
+    cursor: none !important;
+  }
+}
+</style>
+
+<script>
+  const cursorDot = document.querySelector("[data-cursor-dot]");
+  const cursorOutline = document.querySelector("[data-cursor-outline]");
+
+  window.addEventListener("mousemove", function (e) {
+    const posX = e.clientX;
+    const posY = e.clientY;
+
+    // Center dot follows the mouse exactly
+    cursorDot.style.left = `${posX}px`;
+    cursorDot.style.top = `${posY}px`;
+
+    // Outline circle has a smooth delay effect
+    cursorOutline.animate({
+      left: `${posX}px`,
+      top: `${posY}px`
+    }, { duration: 500, fill: "forwards" });
+  });
+
+
+(function() {
+  if (window.innerWidth < 769) return; // Désactivé sur mobile
+
+  // 1. Création de la flèche (SVG)
+  const arrow = document.createElement('div');
+  arrow.id = 'custom-arrow';
+  const SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 20 24">
+    <polygon points="0,0 0,18 5,13 9,22 12,21 8,12 14,12" fill="#ffffff" stroke="#ff3333" stroke-width="1.5"/>
+  </svg>`;
+  arrow.innerHTML = SVG;
+  Object.assign(arrow.style, {
+    position: 'fixed', top: '0', left: '0',
+    pointerEvents: 'none', zIndex: '999999',
+    willChange: 'transform',
+  });
+  document.body.appendChild(arrow);
+
+  // 2. Création du canvas pour la traînée (particles)
+  const tc = document.createElement('canvas');
+  Object.assign(tc.style, {
+    position: 'fixed', top: '0', left: '0',
+    pointerEvents: 'none', zIndex: '999998',
+  });
+  tc.width = window.innerWidth;
+  tc.height = window.innerHeight;
+  document.body.appendChild(tc);
+  const ctx = tc.getContext('2d');
+
+  window.addEventListener('resize', () => {
+    tc.width = window.innerWidth;
+    tc.height = window.innerHeight;
+  });
+
+  let mx = 0, my = 0;
+  const particles = [];
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    arrow.style.transform = `translate(${mx}px, ${my}px)`;
+    
+    // Génère des particules
+    if (Math.random() < 0.4) {
+      particles.push({
+        x: mx, y: my,
+        r: 1.5 + Math.random() * 2,
+        a: 0.8,
+        vx: (Math.random() - 0.5) * 1,
+        vy: (Math.random() - 0.5) * 1,
+        color: Math.random() > 0.3 ? '#ff3333' : '#ffffff',
+      });
+    }
+  }, { passive: true });
+
+  // Animation des particules
+  function loop() {
+    ctx.clearRect(0, 0, tc.width, tc.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.a -= 0.02;
+      if (p.a <= 0) { particles.splice(i, 1); continue; }
+      ctx.globalAlpha = p.a;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
