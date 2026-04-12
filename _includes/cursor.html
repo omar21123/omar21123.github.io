@@ -1,142 +1,135 @@
-
-<div class="cursor-dot" data-cursor-dot></div>
-<div class="cursor-outline" data-cursor-outline></div>
+<div id="cursor-container">
+  <div id="custom-cursor-outline"></div>
+</div>
 
 <style>
-/* Hide the default mouse cursor */
-body, a, button {
-    cursor: none !important;
-}
-
-/* The small red dot in the center */
-.cursor-dot {
-    position: fixed;
-    top: 0; left: 0;
-    width: 8px; height: 8px;
-    background-color: #ff3333; 
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    pointer-events: none; 
-}
-
-/* The large red circle that follows the dot */
-.cursor-outline {
-    position: fixed;
-    top: 0; left: 0;
-    width: 40px; height: 40px;
-    border: 2px solid rgba(255, 51, 51, 0.5); 
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    pointer-events: none;
-}
-
-/* Make the circle bigger when you hover over links */
-a:hover ~ .cursor-outline,
-button:hover ~ .cursor-outline {
-    width: 60px;
-    height: 60px;
-    background-color: rgba(255, 51, 51, 0.1);
-}
-
-/* Turn off the custom cursor on mobile phones */
-@media (max-width: 768px) {
-    .cursor-dot, .cursor-outline {
-        display: none;
+  /* 1. On cache la souris réelle sur PC */
+  @media (min-width: 769px) {
+    *, *::before, *::after {
+      cursor: none !important;
     }
-    body, a, button {
-        cursor: auto !important;
+
+    #custom-cursor-arrow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999999;
+      will-change: transform;
+      transform: translate(-100px, -100px);
     }
-}
-@media (min-width: 769px) {
-  *, *::before, *::after {
-    cursor: none !important;
+
+    #custom-cursor-outline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(255, 51, 51, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999998;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+    }
+
+    #cursor-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999997;
+    }
+
+    /* Style quand on survole un lien */
+    .cursor-hover-active {
+      width: 60px !important;
+      height: 60px !important;
+      background-color: rgba(255, 51, 51, 0.1) !important;
+      border-color: rgba(255, 51, 51, 0.8) !important;
+    }
   }
-  
-  /* On garde le curseur pointeur sur les liens mais on utilise le nôtre */
-  a, button {
-    cursor: none !important;
+
+  /* 2. On désactive tout sur mobile */
+  @media (max-width: 768px) {
+    #cursor-container, #cursor-canvas, #custom-cursor-arrow {
+      display: none !important;
+    }
+    * {
+      cursor: auto !important;
+    }
   }
-}
 </style>
 
 <script>
-  const cursorDot = document.querySelector("[data-cursor-dot]");
-  const cursorOutline = document.querySelector("[data-cursor-outline]");
-
-  window.addEventListener("mousemove", function (e) {
-    const posX = e.clientX;
-    const posY = e.clientY;
-
-    // Center dot follows the mouse exactly
-    cursorDot.style.left = `${posX}px`;
-    cursorDot.style.top = `${posY}px`;
-
-    // Outline circle has a smooth delay effect
-    cursorOutline.animate({
-      left: `${posX}px`,
-      top: `${posY}px`
-    }, { duration: 500, fill: "forwards" });
-  });
-
-
 (function() {
-  if (window.innerWidth < 769) return; // Désactivé sur mobile
+  if (window.innerWidth < 769) return;
 
-  // 1. Création de la flèche (SVG)
+  // Création de la flèche
   const arrow = document.createElement('div');
-  arrow.id = 'custom-arrow';
-  const SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 20 24">
-    <polygon points="0,0 0,18 5,13 9,22 12,21 8,12 14,12" fill="#ffffff" stroke="#ff3333" stroke-width="1.5"/>
-  </svg>`;
-  arrow.innerHTML = SVG;
-  Object.assign(arrow.style, {
-    position: 'fixed', top: '0', left: '0',
-    pointerEvents: 'none', zIndex: '999999',
-    willChange: 'transform',
-  });
+  arrow.id = 'custom-cursor-arrow';
+  arrow.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="26" viewBox="0 0 20 24" style="filter: drop-shadow(0 0 5px rgba(255,51,51,0.5));">
+      <polygon points="0,0 0,18 5,13 9,22 12,21 8,12 14,12" fill="#ffffff" stroke="#ff3333" stroke-width="1.5"/>
+    </svg>`;
   document.body.appendChild(arrow);
 
-  // 2. Création du canvas pour la traînée (particles)
-  const tc = document.createElement('canvas');
-  Object.assign(tc.style, {
-    position: 'fixed', top: '0', left: '0',
-    pointerEvents: 'none', zIndex: '999998',
-  });
-  tc.width = window.innerWidth;
-  tc.height = window.innerHeight;
-  document.body.appendChild(tc);
-  const ctx = tc.getContext('2d');
+  // Création du canvas pour les particules
+  const canvas = document.createElement('canvas');
+  canvas.id = 'cursor-canvas';
+  const ctx = canvas.getContext('2d');
+  document.body.appendChild(canvas);
 
-  window.addEventListener('resize', () => {
-    tc.width = window.innerWidth;
-    tc.height = window.innerHeight;
-  });
-
-  let mx = 0, my = 0;
+  const outline = document.getElementById('custom-cursor-outline');
+  let mx = -100, my = -100; // Position souris
+  let ox = -100, oy = -100; // Position cercle (smooth)
   const particles = [];
 
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    arrow.style.transform = `translate(${mx}px, ${my}px)`;
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX;
+    my = e.clientY;
     
-    // Génère des particules
+    // Déplacement flèche
+    arrow.style.transform = `translate(${mx}px, ${my}px)`;
+
+    // Création particules
     if (Math.random() < 0.4) {
       particles.push({
         x: mx, y: my,
-        r: 1.5 + Math.random() * 2,
+        r: 1.2 + Math.random() * 2,
         a: 0.8,
-        vx: (Math.random() - 0.5) * 1,
-        vy: (Math.random() - 0.5) * 1,
-        color: Math.random() > 0.3 ? '#ff3333' : '#ffffff',
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+        color: Math.random() > 0.4 ? '#ff3333' : '#ffffff'
       });
     }
-  }, { passive: true });
+  });
 
-  // Animation des particules
-  function loop() {
-    ctx.clearRect(0, 0, tc.width, tc.height);
+  // Effet hover sur les liens
+  function updateHover() {
+    document.querySelectorAll('a, button, .post-tag').forEach(el => {
+      el.addEventListener('mouseenter', () => outline.classList.add('cursor-hover-active'));
+      el.addEventListener('mouseleave', () => outline.classList.remove('cursor-hover-active'));
+    });
+  }
+  updateHover();
+
+  function animate() {
+    // Animation fluide du cercle (lerp)
+    ox += (mx - ox) * 0.15;
+    oy += (my - oy) * 0.15;
+    outline.style.left = `${ox}px`;
+    outline.style.top = `${oy}px`;
+
+    // Animation particules
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
       p.x += p.vx; p.y += p.vy; p.a -= 0.02;
@@ -147,8 +140,8 @@ button:hover ~ .cursor-outline {
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();
     }
-    requestAnimationFrame(loop);
+    requestAnimationFrame(animate);
   }
-  loop();
+  animate();
 })();
 </script>
