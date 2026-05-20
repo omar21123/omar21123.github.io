@@ -11,35 +11,46 @@ layout: page
 
   <div class="post-list">
     {% for post in page.posts %}
-      <a href="{{ post.url | relative_url }}" class="custom-post-card">
-        
-        <div class="card-text">
-          <h3>{{ post.title }}</h3>
-          <p>{{ post.content | strip_html | truncatewords: 25 }}</p>
-          
-          <div class="card-meta">
-            <span> <i class="far fa-calendar fa-fw me-1"></i>{{ post.date | date: "%b %d, %Y" }}</span>
-            <span> <i class="far fa-folder-open fa-fw me-1"></i>{{ page.title }}</span>
-          </div>
-        </div>
+    <a href="{{ post.url | relative_url }}" class="custom-post-card">
+      <div class="card-text">
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content | strip_html | truncatewords: 25 }}</p>
 
-        {% if post.image %}
-        <div class="card-img" style="background-image: url('{{ post.image.path | default: post.image | relative_url }}');"></div>
-        {% else %}
-        <div class="card-img" style="background-image: url('/assets/img/banners/offensive.jpg');"></div>
-        {% endif %}
-        
-      </a>
+        <div class="card-meta">
+          <span>
+            <i class="far fa-calendar fa-fw me-1"></i>{{ post.date | date: "%b
+            %d, %Y" }}</span
+          >
+          <span>
+            <i class="far fa-folder-open fa-fw me-1"></i>{{ page.title }}</span
+          >
+        </div>
+      </div>
+
+      {% if post.image %}
+      <div
+        class="card-img"
+        style="background-image: url('{{ post.image.path | default: post.image | relative_url }}');"
+      ></div>
+      {% else %}
+      <div
+        class="card-img"
+        style="
+          background-image: url(&quot;/assets/img/banners/offensive.jpg&quot;);
+        "
+      ></div>
+      {% endif %}
+    </a>
     {% endfor %}
   </div>
 </div>
 
 <style>
-/* =========================================
+  /* =========================================
    DESIGN DES CARTES D'ARTICLES
    ========================================= */
 
-.custom-post-card {
+  .custom-post-card {
     display: flex;
     flex-direction: row;
     background: white;
@@ -50,88 +61,86 @@ layout: page
     color: inherit !important;
     overflow: hidden;
     height: 220px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
     transition: all 0.3s ease;
-}
+  }
 
-.custom-post-card:hover {
+  .custom-post-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 15px rgba(255, 0, 0, 0.1);
     border-color: #ffcccc;
-}
+  }
 
-.card-text {
+  .card-text {
     flex: 1;
     padding: 25px;
     display: flex;
     flex-direction: column;
-}
+  }
 
-.card-text h3 {
+  .card-text h3 {
     font-size: 1.5rem;
     margin-top: 0;
     margin-bottom: 10px;
     color: #333;
     font-family: monospace, sans-serif;
-}
+  }
 
-.card-text p {
+  .card-text p {
     color: #666;
     flex-grow: 1;
     font-size: 0.95rem;
     line-height: 1.5;
-}
+  }
 
-.card-meta {
+  .card-meta {
     font-size: 0.85rem;
     color: #888;
     display: flex;
     gap: 20px;
     font-family: monospace;
-}
+  }
 
-.card-img {
+  .card-img {
     width: 45%;
     background-size: cover;
     background-position: center;
     border-left: 1px solid #eee;
-}
+  }
 
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
     .custom-post-card {
-        flex-direction: column-reverse;
-        height: auto;
+      flex-direction: column-reverse;
+      height: auto;
     }
     .card-img {
-        width: 100%;
-        height: 200px;
-        border-left: none;
+      width: 100%;
+      height: 200px;
+      border-left: none;
     }
-}
-/* =========================================
+  }
+  /* =========================================
    ADAPTATION POUR LE MODE SOMBRE (DARK MODE)
    ========================================= */
 
-html[data-mode="dark"] .custom-post-card {
+  html[data-mode="dark"] .custom-post-card {
     background: #1e1e1e; /* Fond gris très foncé pour s'adapter au thème */
     border-color: #333333; /* Bordure discrète */
-}
+  }
 
-/* Changer la couleur du titre en blanc/gris clair */
-html[data-mode="dark"] .custom-post-card .card-text h3 {
-    color: #f1f1f1; 
-}
+  /* Changer la couleur du titre en blanc/gris clair */
+  html[data-mode="dark"] .custom-post-card .card-text h3 {
+    color: #f1f1f1;
+  }
 
-/* Changer la couleur de la description en gris clair */
-html[data-mode="dark"] .custom-post-card .card-text p {
-    color: #a0a0a0; 
-}
+  /* Changer la couleur de la description en gris clair */
+  html[data-mode="dark"] .custom-post-card .card-text p {
+    color: #a0a0a0;
+  }
 
-/* Garder l'effet de lueur rouge au survol, mais adapté au mode sombre */
-html[data-mode="dark"] .custom-post-card:hover {
+  /* Garder l'effet de lueur rouge au survol, mais adapté au mode sombre */
+  html[data-mode="dark"] .custom-post-card:hover {
     border-color: #ff3333;
     box-shadow: 0 8px 20px rgba(255, 0, 0, 0.15);
-}
+  }
 </style>
-
-{% include cursor.html %}
