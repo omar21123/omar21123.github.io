@@ -1,135 +1,85 @@
-<div id="cursor-fixed-container">
-  <div id="custom-cursor-outline"></div>
-</div>
-
 <style>
-  @media (min-width: 769px) {
-    /* 1. On cache la souris système partout */
-    html, body, a, button, img, .card, #mode-toggle {
+  /* Hide default cursor only on desktop */
+  @media (hover: hover) and (pointer: fine) {
+    html,
+    body,
+    a,
+    button {
       cursor: none !important;
     }
 
-    /* 2. La flèche SVG */
-    #custom-cursor-arrow {
+    #cursor-dot {
       position: fixed;
-      top: 0; left: 0;
-      pointer-events: none;
-      z-index: 2147483647 !important; /* Le maximum possible sous Windows/Linux */
-      will-change: transform;
-      display: block !important;
-    }
-
-    /* 3. Le cercle de suivi */
-    #custom-cursor-outline {
-      position: fixed;
-      top: 0; left: 0;
-      width: 35px; height: 35px;
-      border: 2px solid rgba(255, 51, 51, 0.6);
+      width: 8px;
+      height: 8px;
+      background: #ff3333;
       border-radius: 50%;
       pointer-events: none;
-      z-index: 2147483646 !important;
+      z-index: 999999;
       transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s, background-color 0.3s;
     }
 
-    #cursor-canvas {
+    #cursor-outline {
       position: fixed;
-      top: 0; left: 0;
+      width: 35px;
+      height: 35px;
+      border: 2px solid rgba(255, 51, 51, 0.7);
+      border-radius: 50%;
       pointer-events: none;
-      z-index: 2147483645 !important;
+      z-index: 999998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease-out;
     }
 
-    .cursor-hover-active {
-      width: 55px !important;
-      height: 55px !important;
-      background-color: rgba(255, 51, 51, 0.15) !important;
-      border-color: #ff3333 !important;
+    .hover-big {
+      transform: translate(-50%, -50%) scale(1.6);
+      background: rgba(255, 51, 51, 0.15);
     }
   }
 </style>
 
+<div id="cursor-dot"></div>
+<div id="cursor-outline"></div>
+
 <script>
-(function() {
-  if (window.innerWidth < 769) return;
+  document.addEventListener("DOMContentLoaded", () => {
+    if (window.matchMedia("(hover: none)").matches) return;
 
-  const initCyberCursor = () => {
-    if (document.getElementById('custom-cursor-arrow')) return;
+    const dot = document.getElementById("cursor-dot");
+    const outline = document.getElementById("cursor-outline");
 
-    // Création de la flèche
-    const arrow = document.createElement('div');
-    arrow.id = 'custom-cursor-arrow';
-    arrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="26" viewBox="0 0 20 24"><polygon points="0,0 0,18 5,13 9,22 12,21 8,12 14,12" fill="#ffffff" stroke="#ff3333" stroke-width="1.5"/></svg>`;
-    document.body.appendChild(arrow);
+    let mouseX = 0,
+      mouseY = 0;
+    let outlineX = 0,
+      outlineY = 0;
 
-    // Création du canvas
-    const canvas = document.createElement('canvas');
-    canvas.id = 'cursor-canvas';
-    const ctx = canvas.getContext('2d');
-    document.body.appendChild(canvas);
+    document.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
 
-    const outline = document.getElementById('custom-cursor-outline');
-    let mx = -100, my = -100, ox = -100, oy = -100;
-    const particles = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', resize);
-    resize();
-
-    document.addEventListener('mousemove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      arrow.style.transform = `translate(${mx}px, ${my}px)`;
-
-      if (Math.random() < 0.3) {
-        particles.push({
-          x: mx, y: my,
-          r: 1.2 + Math.random() * 2,
-          a: 0.8,
-          vx: (Math.random() - 0.5) * 1.5,
-          vy: (Math.random() - 0.5) * 1.5,
-          color: Math.random() > 0.4 ? '#ff3333' : '#ffffff'
-        });
-      }
+      dot.style.left = mouseX + "px";
+      dot.style.top = mouseY + "px";
     });
 
-    const animate = () => {
-      ox += (mx - ox) * 0.15;
-      oy += (my - oy) * 0.15;
-      if (outline) {
-        outline.style.left = ox + 'px';
-        outline.style.top = oy + 'px';
-      }
+    function animate() {
+      outlineX += (mouseX - outlineX) * 0.15;
+      outlineY += (mouseY - outlineY) * 0.15;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.vx; p.y += p.vy; p.a -= 0.02;
-        if (p.a <= 0) { particles.splice(i, 1); continue; }
-        ctx.globalAlpha = p.a;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      outline.style.left = outlineX + "px";
+      outline.style.top = outlineY + "px";
+
       requestAnimationFrame(animate);
-    };
+    }
     animate();
 
-    // Détection du hover sur Chirpy
-    document.addEventListener('mouseover', (e) => {
-      if (e.target.closest('a, button, .post-tag, .card, #mode-toggle')) {
-        outline.classList.add('cursor-hover-active');
-      } else {
-        outline.classList.remove('cursor-hover-active');
-      }
+    // Hover effect
+    document.querySelectorAll("a, button").forEach((el) => {
+      el.addEventListener("mouseenter", () => {
+        outline.classList.add("hover-big");
+      });
+      el.addEventListener("mouseleave", () => {
+        outline.classList.remove("hover-big");
+      });
     });
-  };
-
-  // On lance l'initialisation dès que possible
-  if (document.readyState === 'complete') initCyberCursor();
-  else window.addEventListener('load', initCyberCursor);
-})();
+  });
 </script>
