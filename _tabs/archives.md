@@ -30,7 +30,6 @@ order: 4
   {% endfor %}
 </div>
 
-{% include cursor.html %}
 
 <style>
   #archives-cyber {

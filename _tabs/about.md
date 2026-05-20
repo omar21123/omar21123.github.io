@@ -61,7 +61,6 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
 
 </div>
 
-{% include cursor.html %}
 
 <style>
   /* --- Global Styles --- */

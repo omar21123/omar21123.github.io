@@ -108,4 +108,3 @@ order: 2
     background-image: url('/assets/img/banners/defensive.jpg');
 }
 </style>
-{% include cursor.html %}

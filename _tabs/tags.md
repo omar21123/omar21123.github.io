@@ -21,7 +21,6 @@ order: 3
   </div>
 </div>
 
-{% include cursor.html %}
 
 <style>
 /* --- MISE EN PAGE GLOBALE --- */

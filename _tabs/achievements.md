@@ -25,7 +25,6 @@ order: 5
 
 </div>
 
-{% include cursor.html %}
 
 <style>
   .achievement-card {
