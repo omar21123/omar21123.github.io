@@ -11,7 +11,7 @@
   h1,
   h2,
   h3 {
-    cursor: crosshair !important; /* Changes arrow to a clean crosshair */
+    cursor: crosshair !important;
   }
 
   code,
@@ -19,7 +19,7 @@
   blockquote,
   input,
   textarea {
-    cursor: text !important; /* Standard text beam for code snippets */
+    cursor: text !important;
   }
 
   a,
@@ -28,7 +28,7 @@
   .archive-row-cyber,
   #mode-toggle,
   .card {
-    cursor: pointer !important; /* Smooth hand pointer on interactive links */
+    cursor: pointer !important;
   }
 
   /* ==========================================================================
@@ -49,5 +49,16 @@
     .category-card-inner,
   .category-card-wrapper[data-cat="defensive-security"] .category-card-inner {
     background-image: url("/assets/img/banners/cybersecurity.jpg") !important;
+  }
+
+  /* ==========================================================================
+     3. AGRANDISSEMENT DE L'IMAGE DE PROFIL (AVATAR)
+     ========================================================================== */
+  #sidebar #avatar img {
+    width: 140px !important; /* Taille par défaut du thème : ~112px */
+    height: 140px !important;
+    max-width: 140px !important;
+    object-fit: cover !important;
+    border: 3px solid var(--sidebar-btn-bg) !important; /* Ajuste la bordure */
   }
 </style>
