@@ -26,7 +26,7 @@
 <div id="cursor"></div>
 
 <style>
-  /* Masque le curseur système par défaut sur tout le site */
+  /* Masque le curseur système par défaut sur les zones interactives */
   body,
   html,
   a,
@@ -38,28 +38,32 @@
     cursor: none !important;
   }
 
-  /* Style du conteneur qui reçoit le filtre liquide */
+  /* Conteneur du filtre Gooey */
   #cursor {
     pointer-events: none;
     position: fixed;
     display: block;
     border-radius: 0;
+    transform-origin: center center;
     top: 0;
     left: 0;
-    z-index: 100000; /* Priorité maximale d'affichage */
+    z-index: 100000; /* Augmenté pour passer au-dessus de la sidebar de Chirpy */
     will-change: transform;
   }
 
-  /* Configuration des 20 billes (dots) de la traînée */
+  /* Style des 20 billes (dots) qui composent la traînée organique */
   #cursor span {
     position: absolute;
     display: block;
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background-color: #00ffff !important; /* Cyan fluo solide garanti visible */
+    background-color: var(
+      --sidebar-active-color,
+      #00ffff
+    ) !important; /* Cyan ou couleur d'accent Chirpy */
     transform-origin: center center;
-    margin-top: -13px; /* Centrage précis */
+    margin-top: -13px; /* Centre parfaitement le point sur la coordonnée */
     margin-left: -13px;
     will-change: transform;
   }
@@ -67,58 +71,127 @@
 
 <script>
   (function () {
-    const cursorContainer = document.getElementById("cursor");
-    const amount = 20; // Nombre total de points
-    const sineDots = Math.floor(amount * 0.3); // Points en vibration à l'arrêt
-    const width = 26;
-    const idleTimeout = 150;
+    // On n'exécute le code QUE quand le DOM est intégralement prêt pour éviter le crash en production
+    function startCursorPipeline() {
+      const cursorContainer = document.getElementById("cursor");
+      if (!cursorContainer) return; // Sécurité anti-crash
 
-    let mousePosition = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let dots = [];
-    let timeoutID;
-    let idle = false;
+      const amount = 20; // Nombre de billes dans la traînée
+      const sineDots = Math.floor(amount * 0.3); // Billes qui vibrent à l'arrêt
+      const width = 26; // Diamètre de base
+      const idleTimeout = 150; // Temps avant l'effet d'orbite à l'arrêt (ms)
 
-    // RÉSOLUTION DU BUG DE PRODUCTION : Liaison dynamique absolue du filtre SVG
-    const pageUrl = window.location.href.split("#")[0];
-    cursorContainer.style.filter = `url('${pageUrl}#goo')`;
+      let mousePosition = {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+      };
+      let dots = [];
+      let timeoutID;
+      let idle = false;
 
-    // Gestion unifiée de chaque bille
-    class Dot {
-      constructor(index = 0) {
-        this.index = index;
-        this.anglespeed = 0.05;
-        this.x = mousePosition.x;
-        this.y = mousePosition.y;
-        this.scale = 1 - 0.05 * index;
-        this.range = width / 2 - (width / 2) * this.scale + 2;
+      // Correction de la résolution du filtre SVG pour les sous-domaines de production
+      const currentURL = window.location.href.split("#")[0];
+      cursorContainer.style.filter = `url('${currentURL}#goo')`;
 
-        this.element = document.createElement("span");
-        this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
-        cursorContainer.appendChild(this.element);
-      }
+      // Classe répliquant le comportement exact de Dot de la démo
+      class Dot {
+        constructor(index = 0) {
+          this.index = index;
+          this.anglespeed = 0.05;
+          this.x = mousePosition.x;
+          this.y = mousePosition.y;
+          this.scale = 1 - 0.05 * index;
+          this.range = width / 2 - (width / 2) * this.scale + 2;
 
-      lock() {
-        this.lockX = this.x;
-        this.lockY = this.y;
-        this.angleX = Math.PI * 2 * Math.random();
-        this.angleY = Math.PI * 2 * Math.random();
-      }
-
-      draw() {
-        if (!idle || this.index <= sineDots) {
+          // Crée l'élément HTML interne
+          this.element = document.createElement("span");
+          // Applique le scale dégressif natif
           this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
-        } else {
-          // Calcul trigonométrique de l'orbite d'attente
-          this.angleX += this.anglespeed;
-          this.angleY += this.anglespeed;
-          this.y = this.lockY + Math.sin(this.angleY) * this.range;
-          this.x = this.lockX + Math.sin(this.angleX) * this.range;
-          this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
+          cursorContainer.appendChild(this.element);
+        }
+
+        lock() {
+          this.lockX = this.x;
+          this.lockY = this.y;
+          this.angleX = Math.PI * 2 * Math.random();
+          this.angleY = Math.PI * 2 * Math.random();
+        }
+
+        draw() {
+          if (!idle || this.index <= sineDots) {
+            this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
+          } else {
+            // Logique d'orbite mathématique originale quand la souris ne bouge plus
+            this.angleX += this.anglespeed;
+            this.angleY += this.anglespeed;
+            this.y = this.lockY + Math.sin(this.angleY) * this.range;
+            this.x = this.lockX + Math.sin(this.angleX) * this.range;
+            this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
+          }
         }
       }
-    }
 
-    function init() {
+      function startIdleTimer() {
+        timeoutID = setTimeout(goInactive, idleTimeout);
+        idle = false;
+      }
+
+      function resetIdleTimer() {
+        clearTimeout(timeoutID);
+        startIdleTimer();
+      }
+
+      function goInactive() {
+        idle = true;
+        for (let dot of dots) {
+          dot.lock();
+        }
+      }
+
+      function buildDots() {
+        for (let i = 0; i < amount; i++) {
+          let dot = new Dot(i);
+          dots.push(dot);
+        }
+      }
+
+      const onMouseMove = (event) => {
+        mousePosition.x = event.clientX;
+        mousePosition.y = event.clientY;
+        resetIdleTimer();
+      };
+
+      const onTouchMove = (event) => {
+        if (event.touches.length > 0) {
+          mousePosition.x = event.touches[0].clientX;
+          mousePosition.y = event.touches[0].clientY;
+          resetIdleTimer();
+        }
+      };
+
+      // Moteur de rendu principal (Frame loop)
+      const render = () => {
+        let x = mousePosition.x;
+        let y = mousePosition.y;
+
+        dots.forEach((dot, index) => {
+          let nextDot = dots[index + 1] || dots[0];
+          dot.x = x;
+          dot.y = y;
+          dot.draw();
+
+          if (!idle || index <= sineDots) {
+            const dx = (nextDot.x - dot.x) * 0.35;
+            const dy = (nextDot.y - dot.y) * 0.35;
+            x += dx;
+            y += dy;
+          }
+        });
+
+        requestAnimationFrame(render);
+      };
+
+      // Attachement des écouteurs globaux
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("touchmove", onTouchMove, { passive: true });
 
@@ -127,72 +200,11 @@
       render();
     }
 
-    function startIdleTimer() {
-      timeoutID = setTimeout(goInactive, idleTimeout);
-      idle = false;
-    }
-
-    function resetIdleTimer() {
-      clearTimeout(timeoutID);
-      startIdleTimer();
-    }
-
-    function goInactive() {
-      idle = true;
-      for (let dot of dots) {
-        dot.lock();
-      }
-    }
-
-    function buildDots() {
-      for (let i = 0; i < amount; i++) {
-        let dot = new Dot(i);
-        dots.push(dot);
-      }
-    }
-
-    const onMouseMove = (event) => {
-      mousePosition.x = event.clientX;
-      mousePosition.y = event.clientY;
-      resetIdleTimer();
-    };
-
-    const onTouchMove = (event) => {
-      if (event.touches.length > 0) {
-        mousePosition.x = event.touches[0].clientX;
-        mousePosition.y = event.touches[0].clientY;
-        resetIdleTimer();
-      }
-    };
-
-    // Boucle de rendu fluide (60 FPS)
-    const render = () => {
-      let x = mousePosition.x;
-      let y = mousePosition.y;
-
-      dots.forEach((dot, index) => {
-        let nextDot = dots[index + 1] || dots[0];
-        dot.x = x;
-        dot.y = y;
-        dot.draw();
-
-        if (!idle || index <= sineDots) {
-          // Inertie fluide entre les points (dx * 0.35)
-          const dx = (nextDot.x - dot.x) * 0.35;
-          const dy = (nextDot.y - dot.y) * 0.35;
-          x += dx;
-          y += dy;
-        }
-      });
-
-      requestAnimationFrame(render);
-    };
-
-    // Execution sécurisée au chargement du DOM
+    // Vérification stricte du cycle de vie du DOM pour contrer l'effet asynchrone de production
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init);
+      document.addEventListener("DOMContentLoaded", startCursorPipeline);
     } else {
-      init();
+      startCursorPipeline();
     }
   })();
 </script>
