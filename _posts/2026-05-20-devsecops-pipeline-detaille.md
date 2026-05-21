@@ -16,7 +16,7 @@ Ce projet documente en détail la conception, l'implémentation et le déploieme
 
 L'architecture suit un modèle en couches permettant la séparation des responsabilités, l'isolation des services et une sécurité renforcée. Chaque requête entrante transite par Cloudflare avant d'atteindre notre serveur AWS EC2.
 
-![Diagramme d'architecture complet de l'infrastructure](/assets/img/posts/devsecops/architecture-diagram.jpg)
+![Diagramme d'architecture complet de l'infrastructure](/assets/img/posts/devsecops/architecture-diagram.png)
 _Figure 1 : Vue d'ensemble du flux réseau et du pipeline de déploiement._
 
 Deux réseaux Docker distincts sont utilisés pour isoler les services:
@@ -27,7 +27,7 @@ Deux réseaux Docker distincts sont utilisés pour isoler les services:
 
 Le pipeline CI/CD de bout en bout permet des déploiements fluides. Le webhook GitHub est la pièce maîtresse de l'automatisation. À chaque push sur la branche `main` du dépôt, GitHub envoie une requête POST à Jenkins pour déclencher le pipeline.
 
-![Pipeline Jenkins déclenché automatiquement par un push GitHub](/assets/img/posts/devsecops/jenkins-build.jpg)
+![Pipeline Jenkins déclenché automatiquement par un push GitHub](/assets/img/posts/devsecops/jenkins-build.png)
 _Figure 2 : Build Jenkins déclenché automatiquement suite à un commit "Update Footer.jsx"._
 
 Le pipeline Jenkins (écrit de manière déclarative en Groovy) exécute les étapes suivantes :
@@ -38,7 +38,7 @@ Le pipeline Jenkins (écrit de manière déclarative en Groovy) exécute les ét
 
 Dans une approche DevSecOps, la sécurité doit être intégrée directement dans le pipeline CI/CD ("shift left"). J'ai ajouté un stage de scan de vulnérabilités avec Trivy pour analyser automatiquement chaque image Docker construite.
 
-![Rapport de scan de sécurité Trivy](/assets/img/posts/devsecops/trivy-scan.jpg)
+![Rapport de scan de sécurité Trivy](/assets/img/posts/devsecops/trivy-scan.png)
 _Figure 3 : Détection de 204 vulnérabilités sur une ancienne image de base Debian._
 
 Lors des premiers tests, Trivy a détecté 204 vulnérabilités (dont 54 critiques) liées à l'image de base Debian utilisée par Node.js. La solution a consisté à migrer le Stage 1 du Dockerfile vers `node:18-alpine`, réduisant drastiquement la surface d'attaque.
@@ -57,12 +57,12 @@ Un pipeline de production nécessite une observabilité en temps réel. J'ai dé
 * **Node Exporter & cAdvisor :** Collectent les métriques du serveur hôte et l'I/O disque par conteneur.
 * **Prometheus & Grafana :** Stockent et visualisent les métriques.
 
-![Tableau de bord Grafana de l'infrastructure](/assets/img/posts/devsecops/grafana-dashboard.jpg)
+![Tableau de bord Grafana de l'infrastructure](/assets/img/posts/devsecops/grafana-dashboard.png)
 _Figure 4 : Suivi en temps réel de la consommation CPU, RAM et I/O Disque du serveur EC2._
 
 Enfin, pour garantir une réactivité rapide, un bot Telegram a été configuré. Le bloc `post` du `Jenkinsfile` notifie automatiquement l'équipe en cas de succès ou d'échec d'un déploiement.
 
-![Notifications Telegram pour les déploiements Jenkins](/assets/img/posts/devsecops/telegram-bot.jpg)
+![Notifications Telegram pour les déploiements Jenkins](/assets/img/posts/devsecops/telegram-bot.png)
 _Figure 5 : Notifications en temps réel sur le canal Telegram de l'équipe._
 
 ## Conclusion
