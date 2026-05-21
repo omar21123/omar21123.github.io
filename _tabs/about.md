@@ -10,6 +10,12 @@ order: 1
   <p class="cyber-subtitle">Future Cybersecurity Engineer | Digital Developer</p>
 </div>
 
+<div class="cv-container">
+  <a href="/assets/img/CV_Omar_EL_BOUHSAINI_Cybersecurity_frnc.pdf" target="_blank" class="cyber-btn">
+    <i class="fas fa-file-pdf"></i> Download Full Resume
+  </a>
+</div>
+
 I am a **4th-year Engineering Student** at **ENSA Fez**, specializing in **Digital Development and Cybersecurity**. My work focuses on the intersection of secure software architecture and offensive security methodologies.
 
 Driven by a "Security-by-Design" mindset, I develop scalable applications while actively exploring threat hunting, penetration testing, and AI-driven anomaly detection.
@@ -61,6 +67,10 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
 
 </div>
 
+<div class="pdf-viewer" style="margin-top: 40px;">
+  <h3>Résumé Preview</h3>
+  <iframe src="/assets/img/votre_cv.pdf" width="100%" height="700px" style="border: 1px solid #ff3333; border-radius: 8px;"></iframe>
+</div>
 
 <style>
   /* --- Global Styles --- */
@@ -74,8 +84,33 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
   .cyber-subtitle {
     font-size: 1.1rem;
     color: #888;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-family: monospace;
+  }
+
+  /* --- Bouton CV --- */
+  .cv-container { margin-bottom: 30px; }
+
+  .cyber-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: 2px solid #ff3333;
+    color: #ff3333;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .cyber-btn:hover {
+    background: #ff3333;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+    transform: translateY(-2px);
   }
 
   /* --- Skills Grid --- */
@@ -109,22 +144,7 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
     padding-bottom: 10px;
   }
 
-  .category-header i {
-    color: #ff3333;
-    font-size: 1.4rem;
-  }
-
-  .category-header h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    border: none;
-  }
-
-  .skill-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .category-header i { color: #ff3333; font-size: 1.4rem; }
 
   .skill-item {
     background: rgba(136, 136, 136, 0.05);
@@ -133,6 +153,7 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
     border-radius: 6px;
     font-family: monospace;
     font-size: 0.9rem;
+    margin-bottom: 8px;
     transition: all 0.2s ease;
   }
 
@@ -142,13 +163,5 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
     padding-left: 18px;
   }
 
-  /* --- Dark/Light Mode Adaptations --- */
-  html[data-mode="dark"] .skill-category {
-    background: #1e1e1e;
-  }
-  
-  html[data-mode="light"] .skill-category {
-    background: #ffffff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  }
+  html[data-mode="dark"] .skill-category { background: #1e1e1e; }
 </style>
