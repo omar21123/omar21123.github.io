@@ -23,10 +23,8 @@
   </defs>
 </svg>
 
-<div id="cursor"></div>
-
 <style>
-  /* Masque le curseur système par défaut sur les zones interactives */
+  /* Masque le curseur système par défaut sur tout le site */
   body,
   html,
   a,
@@ -38,48 +36,53 @@
     cursor: none !important;
   }
 
-  /* Conteneur du filtre Gooey */
+  /* Conteneur principal forcé au premier plan absolu */
   #cursor {
     pointer-events: none;
-    position: fixed;
-    display: block;
-    border-radius: 0;
-    transform-origin: center center;
-    top: 0;
-    left: 0;
-    z-index: 100000; /* Augmenté pour passer au-dessus de la sidebar de Chirpy */
+    position: fixed !important;
+    display: block !important;
+    border-radius: 0 !important;
+    transform-origin: center center !important;
+    top: 0 !important;
+    left: 0 !important;
+    /* Un z-index astronomique pour passer devant TOUT le thème Chirpy */
+    z-index: 99999999 !important;
     will-change: transform;
   }
 
-  /* Style des 20 billes (dots) qui composent la traînée organique */
+  /* Style des 20 billes (dots) */
   #cursor span {
-    position: absolute;
-    display: block;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background-color: var(
-      --sidebar-active-color,
-      #00ffff
-    ) !important; /* Cyan ou couleur d'accent Chirpy */
-    transform-origin: center center;
-    margin-top: -13px; /* Centre parfaitement le point sur la coordonnée */
-    margin-left: -13px;
+    position: absolute !important;
+    display: block !important;
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 50% !important;
+    background-color: #00ffff !important; /* Forcé en Cyan solide pour le test de prod */
+    transform-origin: center center !important;
+    margin-top: -13px !important;
+    margin-left: -13px !important;
     will-change: transform;
   }
 </style>
 
 <script>
   (function () {
-    // On n'exécute le code QUE quand le DOM est intégralement prêt pour éviter le crash en production
     function startCursorPipeline() {
-      const cursorContainer = document.getElementById("cursor");
-      if (!cursorContainer) return; // Sécurité anti-crash
+      // ÉTAPE DE SÉCURITÉ CRITIQUE : Si le conteneur existe déjà, on le détruit pour éviter les doublons
+      let existingCursor = document.getElementById("cursor");
+      if (existingCursor) existingCursor.remove();
 
-      const amount = 20; // Nombre de billes dans la traînée
-      const sineDots = Math.floor(amount * 0.3); // Billes qui vibrent à l'arrêt
-      const width = 26; // Diamètre de base
-      const idleTimeout = 150; // Temps avant l'effet d'orbite à l'arrêt (ms)
+      // On crée le conteneur dynamiquement en JS
+      const cursorContainer = document.createElement("div");
+      cursorContainer.id = "cursor";
+
+      // On l'injecte directement comme PREMIER ENFANT du <body> pour bypass les bugs de scope CSS
+      document.body.insertBefore(cursorContainer, document.body.firstChild);
+
+      const amount = 20;
+      const sineDots = Math.floor(amount * 0.3);
+      const width = 26;
+      const idleTimeout = 150;
 
       let mousePosition = {
         x: window.innerWidth / 2,
@@ -89,11 +92,10 @@
       let timeoutID;
       let idle = false;
 
-      // Correction de la résolution du filtre SVG pour les sous-domaines de production
+      // Correction absolue du filtre SVG pour la production HTTPS
       const currentURL = window.location.href.split("#")[0];
       cursorContainer.style.filter = `url('${currentURL}#goo')`;
 
-      // Classe répliquant le comportement exact de Dot de la démo
       class Dot {
         constructor(index = 0) {
           this.index = index;
@@ -103,9 +105,7 @@
           this.scale = 1 - 0.05 * index;
           this.range = width / 2 - (width / 2) * this.scale + 2;
 
-          // Crée l'élément HTML interne
           this.element = document.createElement("span");
-          // Applique le scale dégressif natif
           this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
           cursorContainer.appendChild(this.element);
         }
@@ -121,7 +121,6 @@
           if (!idle || this.index <= sineDots) {
             this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
           } else {
-            // Logique d'orbite mathématique originale quand la souris ne bouge plus
             this.angleX += this.anglespeed;
             this.angleY += this.anglespeed;
             this.y = this.lockY + Math.sin(this.angleY) * this.range;
@@ -169,7 +168,6 @@
         }
       };
 
-      // Moteur de rendu principal (Frame loop)
       const render = () => {
         let x = mousePosition.x;
         let y = mousePosition.y;
@@ -191,7 +189,6 @@
         requestAnimationFrame(render);
       };
 
-      // Attachement des écouteurs globaux
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("touchmove", onTouchMove, { passive: true });
 
@@ -200,7 +197,7 @@
       render();
     }
 
-    // Vérification stricte du cycle de vie du DOM pour contrer l'effet asynchrone de production
+    // Double sécurité d'initialisation pour écraser le cycle de build asynchrone
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", startCursorPipeline);
     } else {
