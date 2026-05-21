@@ -1,207 +1,43 @@
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  version="1.1"
-  style="
-    position: fixed;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-    z-index: -1;
-  "
->
-  <defs>
-    <filter id="goo">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
-      <feColorMatrix
-        in="blur"
-        mode="matrix"
-        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -15"
-        result="goo"
-      />
-      <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-    </filter>
-  </defs>
-</svg>
-
 <style>
-  /* Masque le curseur système par défaut sur tout le site */
-  body,
   html,
+  body,
+  p,
+  span,
+  div,
+  text,
+  h1,
+  h2,
+  h3 {
+    cursor: crosshair !important;
+  }
+
+  code,
+  pre,
+  blockquote,
+  input,
+  textarea {
+    cursor: text !important;
+  }
+
   a,
   button,
-  .card,
   .category-card-wrapper,
+  .archive-row-cyber,
   #mode-toggle,
-  .post-preview {
-    cursor: none !important;
+  .card {
+    cursor: pointer !important;
   }
 
-  /* Conteneur principal forcé au premier plan absolu */
-  #cursor {
-    pointer-events: none;
-    position: fixed !important;
-    display: block !important;
-    border-radius: 0 !important;
-    transform-origin: center center !important;
-    top: 0 !important;
-    left: 0 !important;
-    /* Un z-index astronomique pour passer devant TOUT le thème Chirpy */
-    z-index: 99999999 !important;
-    will-change: transform;
+  /* 2. Ton CSS pour agrandir la photo de profil */
+  #sidebar #avatar img {
+    width: 145px !important;
+    height: 145px !important;
+    max-width: 145px !important;
+    object-fit: cover !important;
+    border: 3px solid var(--sidebar-btn-bg) !important;
   }
 
-  /* Style des 20 billes (dots) */
-  #cursor span {
-    position: absolute !important;
-    display: block !important;
-    width: 26px !important;
-    height: 26px !important;
-    border-radius: 50% !important;
-    background-color: #00ffff !important; /* Forcé en Cyan solide pour le test de prod */
-    transform-origin: center center !important;
-    margin-top: -13px !important;
-    margin-left: -13px !important;
-    will-change: transform;
+  #sidebar #avatar {
+    background: none !important;
   }
 </style>
-
-<script>
-  (function () {
-    function startCursorPipeline() {
-      // ÉTAPE DE SÉCURITÉ CRITIQUE : Si le conteneur existe déjà, on le détruit pour éviter les doublons
-      let existingCursor = document.getElementById("cursor");
-      if (existingCursor) existingCursor.remove();
-
-      // On crée le conteneur dynamiquement en JS
-      const cursorContainer = document.createElement("div");
-      cursorContainer.id = "cursor";
-
-      // On l'injecte directement comme PREMIER ENFANT du <body> pour bypass les bugs de scope CSS
-      document.body.insertBefore(cursorContainer, document.body.firstChild);
-
-      const amount = 20;
-      const sineDots = Math.floor(amount * 0.3);
-      const width = 26;
-      const idleTimeout = 150;
-
-      let mousePosition = {
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-      };
-      let dots = [];
-      let timeoutID;
-      let idle = false;
-
-      // Correction absolue du filtre SVG pour la production HTTPS
-      const currentURL = window.location.href.split("#")[0];
-      cursorContainer.style.filter = `url('${currentURL}#goo')`;
-
-      class Dot {
-        constructor(index = 0) {
-          this.index = index;
-          this.anglespeed = 0.05;
-          this.x = mousePosition.x;
-          this.y = mousePosition.y;
-          this.scale = 1 - 0.05 * index;
-          this.range = width / 2 - (width / 2) * this.scale + 2;
-
-          this.element = document.createElement("span");
-          this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
-          cursorContainer.appendChild(this.element);
-        }
-
-        lock() {
-          this.lockX = this.x;
-          this.lockY = this.y;
-          this.angleX = Math.PI * 2 * Math.random();
-          this.angleY = Math.PI * 2 * Math.random();
-        }
-
-        draw() {
-          if (!idle || this.index <= sineDots) {
-            this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
-          } else {
-            this.angleX += this.anglespeed;
-            this.angleY += this.anglespeed;
-            this.y = this.lockY + Math.sin(this.angleY) * this.range;
-            this.x = this.lockX + Math.sin(this.angleX) * this.range;
-            this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) scale(${this.scale})`;
-          }
-        }
-      }
-
-      function startIdleTimer() {
-        timeoutID = setTimeout(goInactive, idleTimeout);
-        idle = false;
-      }
-
-      function resetIdleTimer() {
-        clearTimeout(timeoutID);
-        startIdleTimer();
-      }
-
-      function goInactive() {
-        idle = true;
-        for (let dot of dots) {
-          dot.lock();
-        }
-      }
-
-      function buildDots() {
-        for (let i = 0; i < amount; i++) {
-          let dot = new Dot(i);
-          dots.push(dot);
-        }
-      }
-
-      const onMouseMove = (event) => {
-        mousePosition.x = event.clientX;
-        mousePosition.y = event.clientY;
-        resetIdleTimer();
-      };
-
-      const onTouchMove = (event) => {
-        if (event.touches.length > 0) {
-          mousePosition.x = event.touches[0].clientX;
-          mousePosition.y = event.touches[0].clientY;
-          resetIdleTimer();
-        }
-      };
-
-      const render = () => {
-        let x = mousePosition.x;
-        let y = mousePosition.y;
-
-        dots.forEach((dot, index) => {
-          let nextDot = dots[index + 1] || dots[0];
-          dot.x = x;
-          dot.y = y;
-          dot.draw();
-
-          if (!idle || index <= sineDots) {
-            const dx = (nextDot.x - dot.x) * 0.35;
-            const dy = (nextDot.y - dot.y) * 0.35;
-            x += dx;
-            y += dy;
-          }
-        });
-
-        requestAnimationFrame(render);
-      };
-
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("touchmove", onTouchMove, { passive: true });
-
-      buildDots();
-      startIdleTimer();
-      render();
-    }
-
-    // Double sécurité d'initialisation pour écraser le cycle de build asynchrone
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", startCursorPipeline);
-    } else {
-      startCursorPipeline();
-    }
-  })();
-</script>
