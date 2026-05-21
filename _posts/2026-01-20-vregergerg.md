@@ -1,7 +1,7 @@
 ---
 title: "Mon super projet de Pentest"
 date: 2026-04-12
-categories: [defensive Security]
+categories: [Defensive Security]
 tags: [nmap, metasploit]
 image:
   path: /assets/img/posts/behavioral-detection.jpg

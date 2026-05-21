@@ -107,4 +107,11 @@ order: 2
 .category-card-wrapper[data-cat="defensive-security"] .category-card-inner {
     background-image: url('/assets/img/banners/defensive.jpg');
 }
+
+/* Matches any link pointing to project or Project */
+.category-card-wrapper[href*='/categories/project/'] .category-card-inner,
+.category-card-wrapper[href*='/categories/Project/'] .category-card-inner,
+.category-card-wrapper[data-cat='project'] .category-card-inner {
+  background-image: url('/assets/img/banners/project.jpg') !important;
+}
 </style>

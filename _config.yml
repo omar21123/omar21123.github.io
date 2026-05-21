@@ -91,7 +91,7 @@ pageviews:
 #     light — Use the light color scheme
 #     dark — Use the dark color scheme
 #
-theme_mode: dark
+theme_mode:
 
 # The CDN endpoint for media resources.
 # Notice that once it is assigned, the CDN url
@@ -101,7 +101,7 @@ theme_mode: dark
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: https://media.licdn.com/dms/image/v2/D4E03AQGiOzcy_FE07Q/profile-displayphoto-scale_200_200/B4EZ009.0ZIkAc-/0/1774710160235?e=1777507200&v=beta&t=6K3pI3QyJTiIUX5qjd87grOcG9ZFozq5iuAuV2SMHr8
+avatar: https://media.licdn.com/dms/image/v2/D4E03AQGiOzcy_FE07Q/profile-displayphoto-scale_400_400/B4EZ009.0ZIkAk-/0/1774710160235?e=1781136000&v=beta&t=cGeMo_fTmKKGieCtNfcmgTKv9iutMhAqSEiQ6eU7eM8
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.

@@ -1,0 +1,53 @@
+<style>
+  /* ==========================================================================
+     1. GLOBAL TECH CURSOR SYSTEM
+     ========================================================================== */
+  html,
+  body,
+  p,
+  span,
+  div,
+  text,
+  h1,
+  h2,
+  h3 {
+    cursor: crosshair !important; /* Changes arrow to a clean crosshair */
+  }
+
+  code,
+  pre,
+  blockquote,
+  input,
+  textarea {
+    cursor: text !important; /* Standard text beam for code snippets */
+  }
+
+  a,
+  button,
+  .category-card-wrapper,
+  .archive-row-cyber,
+  #mode-toggle,
+  .card {
+    cursor: pointer !important; /* Smooth hand pointer on interactive links */
+  }
+
+  /* ==========================================================================
+     2. CATEGORY CARD BACKGROUND BANNER SELECTION
+     ========================================================================== */
+  .category-card-wrapper[href*="/categories/project/"] .category-card-inner,
+  .category-card-wrapper[data-cat="project"] .category-card-inner {
+    background-image: url("/assets/img/banners/project.jpg") !important;
+  }
+
+  .category-card-wrapper[href*="/categories/offensive-security/"]
+    .category-card-inner,
+  .category-card-wrapper[data-cat="offensive-security"] .category-card-inner {
+    background-image: url("/assets/img/banners/cybersecurity.jpg") !important;
+  }
+
+  .category-card-wrapper[href*="/categories/defensive-security/"]
+    .category-card-inner,
+  .category-card-wrapper[data-cat="defensive-security"] .category-card-inner {
+    background-image: url("/assets/img/banners/cybersecurity.jpg") !important;
+  }
+</style>
