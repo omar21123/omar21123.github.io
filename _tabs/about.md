@@ -10,10 +10,17 @@ order: 1
   <p class="cyber-subtitle">Future Cybersecurity Engineer | Digital Developer</p>
 </div>
 
-<div class="cv-container">
-  <a href="/assets/img/CV_Omar_EL_BOUHSAINI_Cybersecurity_frnc.pdf" target="_blank" class="cyber-btn">
-    <i class="fas fa-file-pdf"></i> Download Full Resume
-  </a>
+<div class="cv-section" style="margin-top: 40px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h3 style="font-family: 'JetBrains Mono', monospace;">> Terminal.access("Resume_v2026.pdf")</h3>
+    <a href="/assets/img/CV_Omar_EL_BOUHSAINI_Cybersecurity_frnc.pdf" target="_blank" class="cyber-btn-small">
+      <i class="fas fa-external-link-alt"></i> Full Screen
+    </a>
+  </div>
+  
+  <div class="pdf-wrapper">
+    <iframe src="/assets/img/CV_Omar_EL_BOUHSAINI_Cybersecurity_frnc.pdf" class="pdf-embed"></iframe>
+  </div>
 </div>
 
 I am a **4th-year Engineering Student** at **ENSA Fez**, specializing in **Digital Development and Cybersecurity**. My work focuses on the intersection of secure software architecture and offensive security methodologies.
@@ -25,7 +32,6 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
 ## Technical Arsenal
 
 <div class="skills-grid">
-
   <div class="skill-category">
     <div class="category-header">
       <i class="fas fa-user-secret"></i>
@@ -64,104 +70,36 @@ Driven by a "Security-by-Design" mindset, I develop scalable applications while 
       <div class="skill-item"><span>Linux System Administration</span></div>
     </div>
   </div>
-
-</div>
-
-<div class="pdf-viewer" style="margin-top: 40px;">
-  <h3>Résumé Preview</h3>
-  <iframe src="/assets/img/votre_cv.pdf" width="100%" height="700px" style="border: 1px solid #ff3333; border-radius: 8px;"></iframe>
 </div>
 
 <style>
-  /* --- Global Styles --- */
-  .cyber-title {
-    font-family: 'JetBrains Mono', monospace;
-    color: #ff3333;
-    font-weight: 800;
-    margin-bottom: 5px;
-  }
+  /* --- Styles Globales --- */
+  .cyber-title { font-family: 'JetBrains Mono', monospace; color: #ff3333; font-weight: 800; margin-bottom: 5px; }
+  .cyber-subtitle { font-size: 1.1rem; color: #888; margin-bottom: 20px; font-family: monospace; }
 
-  .cyber-subtitle {
-    font-size: 1.1rem;
-    color: #888;
-    margin-bottom: 20px;
-    font-family: monospace;
+  /* --- Styles PDF Viewer --- */
+  .pdf-wrapper {
+    width: 100%; height: 600px; background: #1e1e1e;
+    border: 2px solid #ff3333; border-radius: 8px;
+    overflow: hidden; box-shadow: 0 0 20px rgba(255, 51, 51, 0.2);
   }
-
-  /* --- Bouton CV --- */
-  .cv-container { margin-bottom: 30px; }
-
-  .cyber-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    border: 2px solid #ff3333;
-    color: #ff3333;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    border-radius: 6px;
-    transition: all 0.3s ease;
+  .pdf-embed { width: 100%; height: 100%; border: none; }
+  .cyber-btn-small {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    color: #ff3333; border: 1px solid #ff3333; padding: 5px 10px;
+    border-radius: 4px; text-decoration: none; transition: 0.3s;
   }
-
-  .cyber-btn:hover {
-    background: #ff3333;
-    color: #ffffff;
-    box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
-    transform: translateY(-2px);
-  }
+  .cyber-btn-small:hover { background: #ff3333; color: white; }
 
   /* --- Skills Grid --- */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  .skill-category {
-    background: rgba(136, 136, 136, 0.05);
-    border: 1px solid rgba(136, 136, 136, 0.2);
-    border-radius: 12px;
-    padding: 20px;
-    transition: all 0.3s ease;
-  }
-
-  .skill-category:hover {
-    border-color: #ff3333;
-    box-shadow: 0 5px 15px rgba(255, 51, 51, 0.1);
-    transform: translateY(-5px);
-  }
-
-  .category-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 51, 51, 0.3);
-    padding-bottom: 10px;
-  }
-
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+  .skill-category { background: rgba(136, 136, 136, 0.05); border: 1px solid rgba(136, 136, 136, 0.2); border-radius: 12px; padding: 20px; transition: all 0.3s ease; }
+  .skill-category:hover { border-color: #ff3333; box-shadow: 0 5px 15px rgba(255, 51, 51, 0.1); transform: translateY(-5px); }
+  .category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 51, 51, 0.3); padding-bottom: 10px; }
   .category-header i { color: #ff3333; font-size: 1.4rem; }
-
-  .skill-item {
-    background: rgba(136, 136, 136, 0.05);
-    border: 1px solid rgba(136, 136, 136, 0.1);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-family: monospace;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-    transition: all 0.2s ease;
-  }
-
-  .skill-item:hover {
-    background: rgba(255, 51, 51, 0.05);
-    border-color: rgba(255, 51, 51, 0.4);
-    padding-left: 18px;
-  }
-
+  .skill-item { background: rgba(136, 136, 136, 0.05); border: 1px solid rgba(136, 136, 136, 0.1); padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 0.9rem; margin-bottom: 8px; transition: all 0.2s ease; }
+  .skill-item:hover { background: rgba(255, 51, 51, 0.05); border-color: rgba(255, 51, 51, 0.4); padding-left: 18px; }
+  
+  @media (max-width: 768px) { .pdf-wrapper { height: 400px; } }
   html[data-mode="dark"] .skill-category { background: #1e1e1e; }
 </style>
