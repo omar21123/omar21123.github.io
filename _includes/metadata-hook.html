@@ -1,15 +1,116 @@
 <style>
-  /* --- TEST SIDEBAR CYBERPUNK --- */
-  #sidebar {
-    background: #0d0e15 !important;
-    border-right: 3px solid #00ffff !important;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4) !important;
+  /* =======================================================
+     DESIGN ULTIME SIDEBAR : C3rb3rus RED TEAM INTERACTIVE
+     ======================================================= */
+
+  /* 1. Transitions globales */
+  #sidebar,
+  #sidebar * {
+    transition:
+      background-color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+      border-color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+      color 0.25s ease,
+      box-shadow 0.25s ease,
+      padding-left 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+      transform 0.25s ease !important;
   }
+
+  /* 2. Avatar */
+  #sidebar #avatar {
+    background: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 180px !important;
+    height: 180px !important;
+    margin: 0.4rem auto 0.8rem auto !important;
+  }
+
+  #sidebar #avatar img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    border: 2px solid #ee3d3d !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  #sidebar #avatar img:hover {
+    transform: scale(1.04) rotate(1deg) !important;
+    box-shadow: 0 0 20px rgba(238, 61, 61, 0.6) !important;
+  }
+
+  /* 3. Typographie : Nom et Sous-titre (Alignés à gauche) */
+  #sidebar #title {
+    text-align: left !important;
+    text-indent: 20px !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
   #sidebar #title a {
-    color: #ff0055 !important;
-    text-shadow: 0 0 10px #ff0055 !important;
+    font-family:
+      "JetBrains Mono", "Fira Code", "Space Mono", monospace !important;
+    font-size: 2.1rem !important;
+    font-weight: 700 !important;
+    color: var(--heading-color) !important;
   }
+
+  #sidebar .site-subtitle {
+    text-align: left !important;
+    margin-left: 0px !important;
+    display: block !important;
+    font-family:
+      "JetBrains Mono", "Fira Code", "Space Mono", monospace !important;
+    font-size: 1.1rem !important;
+    font-style: italic !important;
+    color: var(--text-muted-color, #7a7a85) !important;
+    margin-top: 0rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* 4. Menu de navigation */
+  #sidebar .nav-item {
+    margin: 3px 14px !important;
+  }
+
   #sidebar .nav-item a {
-    color: #00ffff !important;
+    font-size: 1.05rem !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+  }
+
+  /* [MODE SOMBRE] */
+  html[data-mode="dark"] #sidebar {
+    background-color: #0d0d11 !important;
+    border-right: 1px solid #1a1a24 !important;
+  }
+
+  html[data-mode="dark"] #sidebar .nav-item.active a {
+    background: rgba(238, 61, 61, 0.1) !important;
+    color: #ee3d3d !important;
+    box-shadow: inset 4px 0 0 #ee3d3d !important;
+  }
+
+  html[data-mode="dark"] #sidebar .nav-item:not(.active) a:hover {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #ffffff !important;
+    padding-left: 18px !important;
+    box-shadow: inset 3px 0 0 rgba(238, 61, 61, 0.5) !important;
+  }
+
+  /* [MODE CLAIR] */
+  html[data-mode="light"] #sidebar .nav-item.active a {
+    background-color: var(--sidebar-btn-hover-bg) !important;
+    color: #ee3d3d !important;
+    box-shadow: inset 4px 0 0 #ee3d3d !important;
+  }
+
+  /* 5. Bas de page */
+  #sidebar .sidebar-bottom a:hover {
+    color: #ee3d3d !important;
+    transform: translateY(-2px) !important;
   }
 </style>
