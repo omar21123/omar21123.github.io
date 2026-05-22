@@ -1,70 +1,72 @@
 ---
-title: "Mise en Place d'une Chaîne DevSecOps Complète : De Git à la Production"
+title: "Building a Full DevSecOps Pipeline: From Git to Production"
 date: 2026-05-20 14:00:00 +0100
 categories: [Project]
 tags: [devops, devsecops, docker, jenkins, aws, grafana, trivy]
-
-# Correct Chirpy Cover Image Configuration:
 image:
   path: /assets/img/posts/devsecops/image.png
   alt: "DevSecOps Pipeline Architecture"
 ---
 
-Ce projet documente en détail la conception, l'implémentation et le déploiement d'une infrastructure DevOps complète hébergeant deux applications en production : un site web vitrine pour le SecOps Club et une plateforme de compétition de cybersécurité (CTF). L'objectif était de maîtriser les pratiques modernes d'intégration et de déploiement continus (CI/CD) en s'appuyant exclusivement sur des technologies open-source et des services cloud professionnels.
+This project documents the design, implementation, and deployment of a comprehensive DevOps infrastructure hosting two production applications: the official SecOps Club website and a cybersecurity competition platform (CTF). The objective was to master modern CI/CD practices using open-source technologies and professional cloud services.
 
-## 1. Architecture de l'Infrastructure
+## 1. Infrastructure Architecture
+The architecture follows a layered model, ensuring separation of concerns, service isolation, and enhanced security. Incoming traffic is filtered through Cloudflare before reaching the AWS EC2 instance.
 
-L'architecture suit un modèle en couches permettant la séparation des responsabilités, l'isolation des services et une sécurité renforcée. Chaque requête entrante transite par Cloudflare avant d'atteindre notre serveur AWS EC2.
+![Full Infrastructure Architecture Diagram](/assets/img/posts/devsecops/architecture-diagram.png)
+*Figure 1: Overview of network traffic flow and deployment pipeline.*
 
-![Diagramme d'architecture complet de l'infrastructure](/assets/img/posts/devsecops/architecture-diagram.png)
-_Figure 1 : Vue d'ensemble du flux réseau et du pipeline de déploiement._
+Two distinct Docker networks are used to isolate services:
+* **`secops-net` (External Bridge):** Enables communication between the Nginx gateway, React frontend, CTFd proxy, and Jenkins.
+* **`internal` (Isolated Bridge):** Secures the MariaDB database and Redis cache, which have no direct internet access.
 
-Deux réseaux Docker distincts sont utilisés pour isoler les services:
-* **`secops-net` (Bridge externe) :** Permet la communication entre le gateway Nginx, le frontend React, le proxy CTFd et Jenkins.
-* **`internal` (Bridge interne isolé) :** Sécurise la base de données MariaDB et le cache Redis, qui n'ont aucun accès direct à Internet.
+---
 
-## 2. CI/CD : Automatisation avec GitHub et Jenkins
+## 2. CI/CD: Automation with GitHub and Jenkins
+The end-to-end CI/CD pipeline enables seamless deployments. The GitHub webhook is the core of this automation: every push to the `main` branch triggers a POST request to Jenkins to start the pipeline.
 
-Le pipeline CI/CD de bout en bout permet des déploiements fluides. Le webhook GitHub est la pièce maîtresse de l'automatisation. À chaque push sur la branche `main` du dépôt, GitHub envoie une requête POST à Jenkins pour déclencher le pipeline.
+![Jenkins pipeline triggered by a GitHub push](/assets/img/posts/devsecops/jenkins-build.png)
+*Figure 2: Jenkins build automatically triggered after an "Update Footer.jsx" commit.*
 
-![Pipeline Jenkins déclenché automatiquement par un push GitHub](/assets/img/posts/devsecops/jenkins-build.png)
-_Figure 2 : Build Jenkins déclenché automatiquement suite à un commit "Update Footer.jsx"._
+The Jenkins pipeline (written in declarative Groovy) executes these steps:
+1. **Check Tools:** Environment verification (Git, Docker, Docker Compose).
+2. **Deploy:** Source code retrieval, building only modified services to optimize time, and restarting target containers without downtime. The full cycle completes in under one minute.
 
-Le pipeline Jenkins (écrit de manière déclarative en Groovy) exécute les étapes suivantes :
-1. **Check Tools :** Vérification de l'environnement (Git, Docker, Docker Compose).
-2. **Deploy :** Récupération du code, build uniquement des services modifiés pour gagner du temps, et redémarrage des conteneurs cibles sans interruption de service globale. Le cycle complet s'exécute en moins d'une minute.
+---
 
-## 3. Sécurité (DevSecOps) avec Trivy
+## 3. DevSecOps with Trivy
+In a DevSecOps approach, security must be integrated directly into the CI/CD pipeline ("shift left"). I added a vulnerability scanning stage using **Trivy** to automatically analyze every Docker image built.
 
-Dans une approche DevSecOps, la sécurité doit être intégrée directement dans le pipeline CI/CD ("shift left"). J'ai ajouté un stage de scan de vulnérabilités avec Trivy pour analyser automatiquement chaque image Docker construite.
+![Trivy security scan report](/assets/img/posts/devsecops/trivy-scan.png)
+*Figure 3: Detection of 204 vulnerabilities in an outdated Debian base image.*
 
-![Rapport de scan de sécurité Trivy](/assets/img/posts/devsecops/trivy-scan.png)
-_Figure 3 : Détection de 204 vulnérabilités sur une ancienne image de base Debian._
+During initial testing, Trivy detected 204 vulnerabilities (including 54 critical) linked to the Debian base image used by Node.js. The solution was to migrate the Dockerfile Stage 1 to `node:18-alpine`, drastically reducing the attack surface.
 
-Lors des premiers tests, Trivy a détecté 204 vulnérabilités (dont 54 critiques) liées à l'image de base Debian utilisée par Node.js. La solution a consisté à migrer le Stage 1 du Dockerfile vers `node:18-alpine`, réduisant drastiquement la surface d'attaque.
+---
 
-## 4. Reverse Proxy, SSL et Déploiement
+## 4. Reverse Proxy, SSL, and Deployment
+The `secops-gateway` (Nginx) container acts as the sole public entry point. It receives all HTTPS traffic and redirects it to the appropriate internal service (virtual hosting).
 
-Le conteneur `secops-gateway` (Nginx) est le seul point d'entrée public. Il reçoit tout le trafic HTTPS et redirige vers le bon service interne (virtual hosting).
+Cloudflare manages the domain’s DNS and generates an Origin SSL certificate to encrypt the tunnel between Cloudflare and the EC2 server. Deployed applications include:
+* **SecOps Club Website:** A React application compiled via a multi-stage Dockerfile (the final image with Nginx weighs only ~25 MB).
+* **CTFd Platform:** Publicly accessible, backed by MariaDB and Redis for high performance.
 
-Cloudflare gère l'intégralité du DNS du domaine et génère un certificat SSL Origin spécifiquement pour chiffrer le tunnel entre Cloudflare and le serveur EC2. Les applications déployées sont :
-* **Site Web SecOps Club :** Une application React compilée via un Dockerfile multi-stage (l'image finale avec Nginx ne pèse que ~25 MB).
-* **Plateforme CTFd :** Accessible publiquement, adossée à MariaDB et Redis pour les performances.
+---
 
-## 5. Observabilité : Monitoring et Alertes
+## 5. Observability: Monitoring and Alerting
+Production pipelines require real-time observability. I deployed a complete monitoring stack:
+* **Node Exporter & cAdvisor:** Collects host server metrics and disk I/O per container.
+* **Prometheus & Grafana:** Stores and visualizes the metrics.
 
-Un pipeline de production nécessite une observabilité en temps réel. J'ai déployé une stack de monitoring complète :
-* **Node Exporter & cAdvisor :** Collectent les métriques du serveur hôte et l'I/O disque par conteneur.
-* **Prometheus & Grafana :** Stockent et visualisent les métriques.
+![Grafana infrastructure dashboard](/assets/img/posts/devsecops/grafana-dashboard.png)
+*Figure 4: Real-time monitoring of CPU, RAM, and disk I/O usage.*
 
-![Tableau de bord Grafana de l'infrastructure](/assets/img/posts/devsecops/grafana-dashboard.png)
-_Figure 4 : Suivi en temps réel de la consommation CPU, RAM et I/O Disque du serveur EC2._
+Finally, to ensure rapid incident response, a **Telegram bot** was configured. The `post` block of the `Jenkinsfile` automatically notifies the team of deployment success or failure.
 
-Enfin, pour garantir une réactivité rapide, un bot Telegram a été configuré. Le bloc `post` du `Jenkinsfile` notifie automatiquement l'équipe en cas de succès ou d'échec d'un déploiement.
+![Telegram notifications for Jenkins deployments](/assets/img/posts/devsecops/telegram-bot.png)
+*Figure 5: Real-time notifications on the team's Telegram channel.*
 
-![Notifications Telegram pour les déploiements Jenkins](/assets/img/posts/devsecops/telegram-bot.png)
-_Figure 5 : Notifications en temps réel sur le canal Telegram de l'équipe._
+---
 
 ## Conclusion
-
-Ce projet a permis de concrétiser une architecture DevOps industrielle complète. Les compétences clés développées incluent l'orchestration avancée avec Docker Compose, l'automatisation CI/CD avec Jenkins, la gestion des reverse proxys avec Nginx, la sécurisation des images avec Trivy, et la surveillance proactive des systèmes de production.
+This project successfully implemented a complete industrial-grade DevOps architecture. Key skills developed include advanced orchestration with Docker Compose, CI/CD automation with Jenkins, reverse proxy management with Nginx, image hardening with Trivy, and proactive production system monitoring.
