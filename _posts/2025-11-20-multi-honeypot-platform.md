@@ -1,6 +1,6 @@
 ---
 title: "Multi-Honeypot Platform with Containment & ELK Stack Analysis"
-date: 2026-05-20 14:00:00 +0100
+date: 2025-11-20 14:00:00 +0100
 categories: [Project]
 tags: [honeypot, python, docker, elk-stack, elasticsearch, kibana, flask, paramiko, cowrie, apparmor, seccomp, cybersecurity]
 image:
