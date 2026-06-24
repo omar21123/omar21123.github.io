@@ -13,31 +13,23 @@ layout: default
         <div class="card-meta">
           <span>
             <i class="far fa-calendar fa-fw me-1"></i>{{ post.date | date: "%b
-            %d, %Y" }}</span
-          >
-
+            %d, %Y" }}
+          </span>
           {% if post.categories.size > 0 %}
           <span>
             <i class="far fa-folder-open fa-fw me-1"></i>{{ post.categories |
-            first }}</span
-          >
+            first }}
+          </span>
           {% endif %}
         </div>
       </div>
 
-      {% if post.image %}
+      {% assign img = post.image.path | default: post.image | default:
+      '/assets/img/banners/offensive.jpg' %}
       <div
         class="card-img"
-        style="background-image: url('{{ post.image.path | default: post.image | relative_url }}');"
+        style="background-image: url('{{ img | relative_url }}');"
       ></div>
-      {% else %}
-      <div
-        class="card-img"
-        style="
-          background-image: url(&quot;/assets/img/banners/offensive.jpg&quot;);
-        "
-      ></div>
-      {% endif %}
     </a>
     {% endfor %}
   </div>
@@ -46,68 +38,89 @@ layout: default
 {% if paginator.total_pages > 1 %} {% include post-paginator.html %} {% endif %}
 
 <style>
-  /* =========================================
-   DESIGN DES CARTES D'ARTICLES (HOME)
-   ========================================= */
+  /* 1. Structure de la liste */
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 2rem;
+  }
 
+  /* 2. Style de la carte */
   .custom-post-card {
     display: flex;
     flex-direction: row;
-    background: white;
-    border: 2px solid #ffe6e6;
+    min-height: 210px;
+    height: auto;
+    background: var(--card-bg);
+    border: 2px solid rgba(179, 0, 0, 0.3);
     border-radius: 8px;
-    margin-bottom: 25px;
-    text-decoration: none !important;
-    color: inherit !important;
     overflow: hidden;
-    height: 220px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    text-decoration: none !important;
+    color: var(--text-color) !important;
     transition: all 0.3s ease;
   }
 
   .custom-post-card:hover {
+    border-color: #ff3333;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
     transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(255, 0, 0, 0.1);
-    border-color: #ffcccc;
   }
 
+  /* 3. Texte et Meta */
   .card-text {
     flex: 1;
     padding: 25px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
   }
 
   .card-text h3 {
     font-size: 1.5rem;
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #333;
-    font-family: monospace, sans-serif;
-  }
-
-  .card-text p {
-    color: #666;
-    flex-grow: 1;
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-
-  .card-meta {
-    font-size: 0.85rem;
-    color: #888;
-    display: flex;
-    gap: 20px;
+    font-weight: 700;
+    margin-top: 3px;
+    margin-bottom: 12px;
+    color: var(--heading-color);
     font-family: monospace;
   }
 
-  .card-img {
-    width: 45%;
-    background-size: cover;
-    background-position: center;
-    border-left: 1px solid #eee;
+  .card-text p {
+    color: var(--text-muted-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 3em;
   }
 
+  .card-meta {
+    margin-top: auto;
+    font-size: 0.8rem;
+    color: var(--text-muted-color);
+    font-family: monospace;
+    display: flex;
+    gap: 15px;
+  }
+
+  /* 4. Image */
+  .card-img {
+    width: 40%;
+    background-size: cover;
+    background-position: center;
+    border-left: 2px solid rgba(179, 0, 0, 0.3);
+    transition: border-color 0.3s ease;
+  }
+
+  .custom-post-card:hover .card-img {
+    border-color: #ff3333;
+  }
+
+  /* 5. Responsive */
   @media (max-width: 768px) {
     .custom-post-card {
       flex-direction: column-reverse;
@@ -115,32 +128,9 @@ layout: default
     }
     .card-img {
       width: 100%;
-      height: 200px;
+      height: 180px;
       border-left: none;
+      border-bottom: 2px solid rgba(179, 0, 0, 0.3);
     }
-  }
-  /* =========================================
-   ADAPTATION POUR LE MODE SOMBRE (DARK MODE)
-   ========================================= */
-
-  html[data-mode="dark"] .custom-post-card {
-    background: #1e1e1e; /* Fond gris très foncé pour s'adapter au thème */
-    border-color: #333333; /* Bordure discrète */
-  }
-
-  /* Changer la couleur du titre en blanc/gris clair */
-  html[data-mode="dark"] .custom-post-card .card-text h3 {
-    color: #f1f1f1;
-  }
-
-  /* Changer la couleur de la description en gris clair */
-  html[data-mode="dark"] .custom-post-card .card-text p {
-    color: #a0a0a0;
-  }
-
-  /* Garder l'effet de lueur rouge au survol, mais adapté au mode sombre */
-  html[data-mode="dark"] .custom-post-card:hover {
-    border-color: #ff3333;
-    box-shadow: 0 8px 20px rgba(255, 0, 0, 0.15);
   }
 </style>
